@@ -1,4 +1,4 @@
-Lelucermaire - OpeaACG Group
+Lelucernaire - OpeaACG Group
 ============================
 
 ## About OpenACG Group
