@@ -1,4 +1,4 @@
-Lelucernaire - OpeaACG Group
+Lelucernaire - OpenACG Group
 ============================
 
 ## About OpenACG Group
@@ -9,4 +9,3 @@ join the organization and contribute your ideas.
 
 ## Our projects
 * Rendering framework & visual novel framework [Cocoa](https://github.com/OpenACG-Group/Cocoa)
-

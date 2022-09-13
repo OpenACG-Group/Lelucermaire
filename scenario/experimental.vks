@@ -1,0 +1,64 @@
+
+// 定义 layout，layout 描述了画面内各种元素的布局
+layout #single_stand_normal {
+    (transform name="root_transform" offset=<0, 0>
+        (texture name="bgimage" resource=%bgimage_texture_id)
+        (transform name="character_image_offset" offset=%char_offset_vec
+            (texture name="character_image" resource=%character_texture_id))
+        (transform name="msgbox_offset" offset=%msgbox_offset_vec
+            (opacity name="msgbox_opacity" alpha=%msgbox_opacity_value
+                (texture name="msgbox_background_texture" resource=%msgbox_bg_texture_id)
+                (sublayout #msgbox_contents_layout)
+            )
+        )
+    )
+};
+
+// layout 可以被另一个 layout 递归包含，称为 sublayout
+layout #msgbox_contents_layout {
+    (transform name="textblob_offset" offset=<50,50>
+        ...
+    )
+};
+
+// 指定使用某资源归档
+use_package package="org.Company.MyStory.resources";
+
+// 定义存储纹理对象的列表
+declare texture_list: List[Integer];
+
+// 从文件加载纹理对象，提前上传到渲染设备，得到纹理 ID，保存在纹理列表中
+upload file="//bgimage/mea_room_morning.png" => texture_list;
+upload file="//fgimage/mea/mea_s2np0c.png" => texture_list;
+upload file="//uikit/images/message_box_background_simple.png" => texture_list;
+
+
+// 将 layout 进行实例化，传入需要的纹理、坐标等参数，实例化后的 layout 成为一个场景 scene
+// 用 instantiate ... with 中的 with 关键字指定一系列实例化参数
+instantiate #single_stand_normal with {
+    texture_list[0] => bgimage_texture_id,
+    ...
+} => single_stand_normal_scene;
+
+// 渲染场景
+use_scene #single_stand_normal_scene;
+
+// 使用指定的 TextBlob 进行文字显示
+// use_textblob A from B 指定使用经由 B 实例化的 A layout 中的 text_blob 模板
+use_textblob #msgbox_contents_layout.text_blob from single_stand_normal_scene;
+
+// 开始剧本
+@startdoc;
+
+[[シロバナ]]
+やりますか？
+
+[[そら]]
+やりますね！
+
+@enddoc;
+
+// 离开文件是所有对象会被回收，使用 retain 关键字保留这些对象可以避免它们被回收，
+// as 后接一个导出名，可以在文件外部访问对象。
+retain texture_list as "texture_list";
+
